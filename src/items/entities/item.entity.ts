@@ -16,7 +16,7 @@ export class Item {
   @Column()
   quantity: number;
 
-  @Column()
+  @Column({ nullable: true })
   quotation_date: Date;
 
   @Column({ nullable: true })
@@ -28,16 +28,16 @@ export class Item {
   @Column({ nullable: true })
   in_route_date: Date;
 
-  @Column()
+  @Column({ nullable: true })
   supplier_name: string;
 
-  @Column()
+  @Column({ nullable: true })
   price_category: string;
 
-  @Column()
+  @Column({ nullable: true })
   supplier_contact: string;
 
-  @ManyToOne(() => Order, order => order.items)
+  @ManyToOne(() => Order, order => order.items, { nullable: true})
   order: Order;
 
   @OneToMany(() => Picture, picture => picture.item)

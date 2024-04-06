@@ -11,6 +11,7 @@ import { Item } from './items/entities/item.entity';
 import { Order } from './orders/entities/order.entity';
 import { Picture } from './pictures/entities/picture.entity';
 import { ConfigModule } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -31,6 +32,6 @@ import { ConfigModule } from '@nestjs/config';
     PicturesModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, JwtService],
 })
 export class AppModule {}

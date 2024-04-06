@@ -6,6 +6,12 @@ export class Picture {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ nullable: true })
+  file_uploaded_name: string;
+
+  @Column({ nullable: true })
+  original_name: string;
+
   @Column()
   url: string;
 

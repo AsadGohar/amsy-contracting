@@ -19,7 +19,7 @@ export class Order {
   @Column()
   order_type: string;
 
-  @Column({ type: 'enum', enum: ['confirmed', 'pending'] })
+  @Column({ type: 'enum', enum: ['confirmed', 'pending'], default: 'pending' })
   status: string;
 
   @Column({ nullable: true })
