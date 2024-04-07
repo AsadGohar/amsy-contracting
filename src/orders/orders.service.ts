@@ -98,8 +98,10 @@ export class OrdersService {
     });
   }
 
-  update(id: number, updateOrderDto: PartialOrderDto) {
-    return `This action updates a #${id} order`;
+ async update(id: number, updateOrderDto: PartialOrderDto) {
+    return await this.orderRepository.update(id,{
+      ...updateOrderDto
+    })
   }
 
   remove(id: number) {

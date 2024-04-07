@@ -31,6 +31,12 @@ export class OrdersController {
     return this.ordersService.getOrderByStatus(dto);
   }
 
+  @Post()
+  @UseGuards(AuthGuard)
+  updateStatus(@Body(ValidationPipe) dto: PartialOrderDto, @Request() request) {
+    return this.ordersService.getOrderByStatus(dto);
+  }
+
   @Get('all')
   @UseGuards(AuthGuard)
   findAll() {

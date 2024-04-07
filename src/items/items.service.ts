@@ -66,11 +66,14 @@ export class ItemsService {
   }
 
   async findAll() {
-    return await this.itemRepository.find();
+    return await this.itemRepository.find({
+      relations: ['order', 'pictures'],
+    });
   }
 
   async findOne(id: number) {
     return await this.itemRepository.findOne({
+      relations: ['order', 'pictures'],
       where: {
         id,
       },
