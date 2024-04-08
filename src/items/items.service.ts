@@ -84,8 +84,11 @@ export class ItemsService {
   }
 
   async update(id: number, updateItemDto: UpdateItemDto) {
-    const user = await this.itemRepository.update(id, updateItemDto);
-    return { user, message: 'item updated successfully' };
+    const item = await this.itemRepository.update(id, updateItemDto);
+    if (item.affected > 0) {
+      return { item, message: 'item updated successfully' };
+    }
+    return { message: 'failed to update item' };
   }
 
   async remove(id: number) {

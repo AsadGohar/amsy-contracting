@@ -23,5 +23,5 @@ export class CreateOrderDto {
   note: string;
 
   @IsArray()
-  item_ids: number[];
+  items: CreateItemDto[];
 }

@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { Order } from '../../orders/entities/order.entity';
 import { Picture } from '../../pictures/entities/picture.entity';
 
@@ -37,9 +43,12 @@ export class Item {
   @Column({ nullable: true })
   supplier_contact: string;
 
-  @ManyToOne(() => Order, order => order.items, { nullable: true})
+  @ManyToOne(() => Order, (order) => order.items, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
   order: Order;
 
-  @OneToMany(() => Picture, picture => picture.item)
+  @OneToMany(() => Picture, (picture) => picture.item)
   pictures: Picture[];
 }

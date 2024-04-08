@@ -79,9 +79,14 @@ export class UsersService {
     const update_user = await this.userRepository.update(id, {
       ...updateUserDto,
     });
+    if(update_user.affected>0){
+      return {
+        user: update_user,
+        message: 'updated user successfully',
+      };
+    }
     return {
-      user: update_user,
-      message: 'updated user successfully',
+      message: 'failed to update user',
     };
   }
 

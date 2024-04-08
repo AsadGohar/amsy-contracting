@@ -7,11 +7,14 @@ import {
   UseGuards,
   Request,
   ValidationPipe,
+  UseInterceptors,
+  UploadedFiles
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { PartialOrderDto } from './dto/partial-order.dto';
 import { AuthGuard } from 'src/guards/auth.guards';
+import { AnyFilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('orders')
 export class OrdersController {
@@ -19,8 +22,29 @@ export class OrdersController {
 
   @Post()
   @UseGuards(AuthGuard)
-  create(@Body(ValidationPipe) dto: CreateOrderDto, @Request() request) {
-    return this.ordersService.create(dto, request.decoded_data.user_id);
+  @UseInterceptors(AnyFilesInterceptor())
+  create(@Body(new ValidationPipe()) dto: CreateOrderDto, @UploadedFiles() files: Array<Express.Multer.File> , @Request() request) {
+    // console.log(files,'filllle', dto)
+    // console.log(files,'filllle')
+    const separatedFiles: { [key: number]: Express.Multer.File[] } = {};
+
+    // Group files by item index
+    files.forEach(file => {
+      // Extract item index from the file field name
+      const fieldName = file.fieldname; // Field name is in the format 'items[index].picture'
+      const match = fieldName.match(/items-picture-(\d+)/);
+      if (match && match.length === 2) {
+        const itemIndex = parseInt(match[1], 10);
+        if (!separatedFiles[itemIndex]) {
+          separatedFiles[itemIndex] = [];
+        }
+        separatedFiles[itemIndex].push(file);
+      }
+    });
+
+    // Now you have separated files based on their item index
+    // console.log(separatedFiles);
+    return this.ordersService.create(dto, request.decoded_data.user_id, separatedFiles);
   }
 
   @Post()

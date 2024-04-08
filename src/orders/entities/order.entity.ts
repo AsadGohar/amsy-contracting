@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Item } from '../../items/entities/item.entity';
 
@@ -25,9 +31,9 @@ export class Order {
   @Column({ nullable: true })
   note: string;
 
-  @ManyToOne(() => User, user => user.orders)
+  @ManyToOne(() => User, (user) => user.orders, { onDelete: 'CASCADE' })
   user: User;
 
-  @OneToMany(() => Item, item => item.order)
+  @OneToMany(() => Item, (item) => item.order)
   items: Item[];
 }
