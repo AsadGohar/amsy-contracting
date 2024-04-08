@@ -48,45 +48,51 @@ export class ItemsService {
         );
       });
 
-      const response = await Promise.all(file_promises);
-      // console.log(response)
-      if (response) {
-        for (let index = 0; index < files.length; index++) {
-          const create_pic = this.picRepository.create({
-            file_uploaded_name: file_names[index],
-            item: new_item,
-            original_name: files[index].filename,
-            url: 'https://amsy-constructing.s3.amazonaws.com/' + file_names[index]
-          });
-          await this.picRepository.save(create_pic);
-        }
+      await Promise.all(file_promises);
+
+      for (let index = 0; index < files.length; index++) {
+        const create_pic = this.picRepository.create({
+          file_uploaded_name: file_names[index],
+          item: new_item,
+          original_name: files[index].filename,
+          url:
+            'https://amsy-constructing.s3.amazonaws.com/' + file_names[index],
+        });
+        await this.picRepository.save(create_pic);
       }
-      return { item_id: new_item.id };
     }
+
+    return { item_id: new_item.id, message: 'item created successfully' };
   }
 
   async findAll() {
-    return await this.itemRepository.find({
+    const items = await this.itemRepository.find({
       relations: ['order', 'pictures'],
     });
+    return { items, message: 'found all items' };
   }
 
   async findOne(id: number) {
-    return await this.itemRepository.findOne({
+    const item = await this.itemRepository.findOne({
       relations: ['order', 'pictures'],
-      where: {
-        id,
-      },
+      where: { id },
     });
+    if (!item) {
+      throw new Error('item not found');
+    }
+    return { item, message: 'found item successfully' };
   }
 
   async update(id: number, updateItemDto: UpdateItemDto) {
-    return await this.itemRepository.update(id, {
-      ...updateItemDto,
-    });
+    const user = await this.itemRepository.update(id, updateItemDto);
+    return { user, message: 'item updated successfully' };
   }
 
   async remove(id: number) {
-    return await this.itemRepository.delete(id);
+    const result = await this.itemRepository.delete(id);
+    if (result.affected === 0) {
+      throw new Error('item not found');
+    }
+    return { message: 'item deleted successfully' };
   }
 }

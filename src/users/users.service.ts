@@ -28,6 +28,7 @@ export class UsersService {
     });
 
     return {
+      message: 'signup successfull',
       access_token,
     };
   }
@@ -51,28 +52,43 @@ export class UsersService {
       secret: process.env.JWT_SECRET,
       expiresIn: '1d',
     });
-    return { user, access_token };
+    return { user, access_token, message: 'login successfull' };
   }
 
   async findAll() {
-    return await this.userRepository.find();
+    const find_all_users =  await this.userRepository.find();
+    return {
+      users: find_all_users,
+      message:'find all users'
+    }
   }
 
   async findOne(id: number) {
-    return await this.userRepository.findOne({
+    const find_user = await this.userRepository.findOne({
       where: {
         id,
       },
     });
+    return {
+      user:find_user,
+      message:'found user successfully'
+    }
   }
 
   async update(id: number, updateUserDto: PartialUserDto) {
-    return await this.userRepository.update(id, {
+    const update_user = await this.userRepository.update(id, {
       ...updateUserDto,
     });
+    return {
+      user: update_user,
+      message: 'updated user successfully',
+    };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    await this.userRepository.delete(id);
+    return {
+      message: 'deleted user successfully',
+    };
   }
 }

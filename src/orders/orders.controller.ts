@@ -3,9 +3,7 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
   UseGuards,
   Request,
   ValidationPipe,
@@ -27,13 +25,13 @@ export class OrdersController {
 
   @Post()
   @UseGuards(AuthGuard)
-  getOrderByStatus(@Body(ValidationPipe) dto: PartialOrderDto, @Request() request) {
+  getOrderByStatus(@Body(ValidationPipe) dto: PartialOrderDto) {
     return this.ordersService.getOrderByStatus(dto);
   }
 
   @Post()
   @UseGuards(AuthGuard)
-  updateStatus(@Body(ValidationPipe) dto: PartialOrderDto, @Request() request) {
+  updateStatus(@Body(ValidationPipe) dto: PartialOrderDto) {
     return this.ordersService.getOrderByStatus(dto);
   }
 
