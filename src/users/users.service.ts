@@ -18,7 +18,7 @@ export class UsersService {
   async create(createUserDto: CreateUserDto) {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
     createUserDto.password = hashedPassword;
-    let create_user = this.userRepository.create(createUserDto);
+    const create_user = this.userRepository.create(createUserDto);
     const new_user = await this.userRepository.save(create_user);
 
     const payload = { user_id: new_user.id, email: new_user.email };

@@ -27,6 +27,6 @@ export class User {
   @Column({ type: 'enum', enum: ['procurement', 'engineer'] })
   role: string;
 
-  @OneToMany(() => Order, order => order.user)
+  @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
 }
