@@ -56,11 +56,11 @@ export class UsersService {
   }
 
   async findAll() {
-    const find_all_users =  await this.userRepository.find();
+    const find_all_users = await this.userRepository.find();
     return {
       users: find_all_users,
-      message:'find all users'
-    }
+      message: 'find all users',
+    };
   }
 
   async findOne(id: number) {
@@ -70,18 +70,23 @@ export class UsersService {
       },
     });
     return {
-      user:find_user,
-      message:'found user successfully'
-    }
+      user: find_user,
+      message: 'found user successfully',
+    };
   }
 
   async update(id: number, updateUserDto: PartialUserDto) {
     const update_user = await this.userRepository.update(id, {
       ...updateUserDto,
     });
-    if(update_user.affected>0){
+    if (update_user.affected > 0) {
+      const user = await this.userRepository.findOne({
+        where: {
+          id,
+        },
+      });
       return {
-        user: update_user,
+        updated_user: user,
         message: 'updated user successfully',
       };
     }
