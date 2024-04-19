@@ -25,7 +25,7 @@ export class Order {
   @Column()
   order_type: string;
 
-  @Column({ type: 'enum', enum: ['confirmed', 'pending'], default: 'pending' })
+  @Column({ type: 'enum', enum: ['denied', 'approved', 'inprogress'], default: 'inprogress' })
   status: string;
 
   @Column({ nullable: true })

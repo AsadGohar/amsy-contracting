@@ -15,26 +15,24 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { PartialOrderDto } from './dto/partial-order.dto';
 import { AuthGuard } from 'src/guards/auth.guards';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
+import { formDataToJson } from 'src/utils/form.utils';
 
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
-  @Post()
+  @Post('new')
   @UseGuards(AuthGuard)
-  @UseInterceptors(AnyFilesInterceptor())
-  create(
-    @Body(new ValidationPipe()) dto: CreateOrderDto,
-    @UploadedFiles() files: Array<Express.Multer.File>,
-    @Request() request,
-  ) {
-    const separatedFiles: { [key: number]: Express.Multer.File[] } = {};
+  create(@Body('data') data: any, @Request() request) {
 
-    files.forEach((file) => {
+    const new_data: any = formDataToJson(data);
+    const separatedFiles = {};
+
+    new_data.items_pictures.forEach((file) => {
       const fieldName = file.fieldname;
-      const match = fieldName.match(/items-picture-(\d+)/);
-      if (match && match.length === 2) {
-        const itemIndex = parseInt(match[1], 10);
+      const match = fieldName.match(/^items-pictures-\d+$/);
+      if (match && match.length === 1) {
+        const itemIndex = parseInt(match.index, 10);
         if (!separatedFiles[itemIndex]) {
           separatedFiles[itemIndex] = [];
         }
@@ -43,7 +41,13 @@ export class OrdersController {
     });
 
     return this.ordersService.create(
-      dto,
+      {
+        delivery_date: new_data.delivery_date,
+        project_name: new_data.project_name,
+        delivery_address: new_data.delivery_address,
+        note: new_data.note,
+        items: new_data.items,
+      },
       request.decoded_data.user_id,
       separatedFiles,
     );

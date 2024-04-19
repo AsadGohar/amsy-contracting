@@ -16,7 +16,7 @@ export class CreateOrderDto {
   order_type: string;
 
   @IsOptional()
-  @IsEnum(['confirmed', 'pending'])
+  @IsEnum(['denied', 'approved', 'inprogress'])
   status: string;
 
   @IsOptional()
