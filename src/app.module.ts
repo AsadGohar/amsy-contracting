@@ -26,7 +26,7 @@ import { JwtService } from '@nestjs/jwt';
       synchronize: true,
       // ssl: false,
       ssl:{
-        rejectUnauthorized:false
+        rejectUnauthorized:false,
       },
     }),
     UsersModule,
