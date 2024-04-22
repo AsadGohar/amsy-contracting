@@ -36,7 +36,7 @@ export class ItemsController {
   @Get(':id')
   @UseGuards(AuthGuard)
   findOne(@Param('id') id: string) {
-    return this.itemsService.findOne(+id);
+    return this.itemsService.findOne(+id)
   }
 
   @Patch(':id')
