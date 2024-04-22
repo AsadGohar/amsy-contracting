@@ -39,6 +39,7 @@ export class UsersService {
       relations: [],
       where: { email },
     });
+    if(!user) throw new UnauthorizedException('user not found');
     const passwordMatched = await bcrypt.compare(password, user.password);
     if (!passwordMatched) {
       throw new UnauthorizedException('Invalid Credentials');
