@@ -24,7 +24,6 @@ export class OrdersController {
   @Post('new')
   @UseGuards(AuthGuard)
   create(@Body('data') data: any, @Request() request) {
-
     const new_data: any = formDataToJson(data);
     const separatedFiles = {};
 
@@ -75,6 +74,16 @@ export class OrdersController {
   @UseGuards(AuthGuard)
   findOne(@Param('id') id: string) {
     return this.ordersService.findOne(+id);
+  }
+
+  @Post('update/:id')
+  @UseGuards(AuthGuard)
+  async updateOrder(
+    @Param('id') id: string,
+    @Body(ValidationPipe) updateOrderDto: PartialOrderDto,
+  ) {
+    const orderId = parseInt(id, 10);
+    return this.ordersService.update(orderId, updateOrderDto);
   }
 
   @Get('user/:user_id')

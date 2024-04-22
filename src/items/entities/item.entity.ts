@@ -40,6 +40,9 @@ export class Item {
   @Column({ nullable: true })
   price_category: string;
 
+  @Column({ nullable: true, default: 0 })
+  price: number;
+
   @Column({ nullable: true })
   supplier_contact: string;
 
