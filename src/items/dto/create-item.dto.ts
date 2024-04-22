@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { Column } from 'typeorm';
 
 export class CreateItemDto {
   @IsNotEmpty()
@@ -25,6 +26,9 @@ export class CreateItemDto {
 
   @IsOptional()
   supplier_name: string;
+
+  @IsOptional()
+  price: number;
 
   @IsOptional()
   price_category: string;

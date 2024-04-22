@@ -114,7 +114,12 @@ export class OrdersService {
   }
 
   async findAll() {
-    return await this.orderRepository.find();
+    return await this.orderRepository.find({
+      relations: ['user'],
+      order: {
+        id: 'DESC',
+      },
+    });
   }
 
   async findOne(id: number) {
@@ -126,19 +131,37 @@ export class OrdersService {
       },
     });
 
-    console.log(res.items[0].pictures,'ressss')
-    return res
+    console.log(res.items[0].pictures, 'ressss');
+    return res;
   }
 
   async findByUserId(user_id: number) {
     return await this.orderRepository.find({
       relations: ['user'],
+      order: {
+        id: 'DESC',
+      },
       where: {
         user: {
           id: user_id,
         },
       },
     });
+  }
+  async updateOrder(id: number, updateOrderDto: PartialOrderDto) {
+    try {
+      await this.orderRepository.update(id, updateOrderDto);
+      return {
+        success: true,
+        message: `Order with id ${id} updated successfully.`,
+      };
+    } catch (error) {
+      console.error(`Error updating order with id ${id}:`, error);
+      return {
+        success: false,
+        message: `Failed to update order with id ${id}.`,
+      };
+    }
   }
 
   async getOrderByStatus(dto: PartialOrderDto) {

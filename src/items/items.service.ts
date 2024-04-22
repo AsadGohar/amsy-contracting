@@ -74,7 +74,7 @@ export class ItemsService {
 
   async findOne(id: number) {
     const item = await this.itemRepository.findOne({
-      relations: ['order', 'pictures'],
+      relations: ['order', 'order.user', 'pictures'],
       where: { id },
     });
     if (!item) {
