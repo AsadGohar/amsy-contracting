@@ -4,6 +4,8 @@ import {
   Column,
   ManyToOne,
   OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn
 } from 'typeorm';
 import { Order } from '../../orders/entities/order.entity';
 import { Picture } from '../../pictures/entities/picture.entity';
@@ -45,6 +47,12 @@ export class Item {
 
   @Column({ nullable: true })
   supplier_contact: string;
+
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  updatedAt: Date;
 
   @ManyToOne(() => Order, (order) => order.items, {
     nullable: true,

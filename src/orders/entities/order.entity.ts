@@ -4,6 +4,8 @@ import {
   Column,
   ManyToOne,
   OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Item } from '../../items/entities/item.entity';
@@ -30,6 +32,12 @@ export class Order {
 
   @Column({ nullable: true })
   note: string;
+
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  updatedAt: Date;
 
   @ManyToOne(() => User, (user) => user.orders, { onDelete: 'CASCADE' })
   user: User;

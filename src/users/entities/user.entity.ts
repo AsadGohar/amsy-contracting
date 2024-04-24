@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn
+} from 'typeorm';
 import { Order } from '../../orders/entities/order.entity';
 
 @Entity()
@@ -26,6 +33,12 @@ export class User {
 
   @Column({ type: 'enum', enum: ['procurement', 'engineer'] })
   role: string;
+
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  updatedAt: Date;
 
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
