@@ -7,16 +7,11 @@ import {
   UseGuards,
   Request,
   ValidationPipe,
-  UseInterceptors,
-  UploadedFiles,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
-import { CreateOrderDto } from './dto/create-order.dto';
 import { PartialOrderDto } from './dto/partial-order.dto';
 import { AuthGuard } from 'src/guards/auth.guards';
-import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { formDataToJson } from 'src/utils/form.utils';
-
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}

@@ -1,15 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { CreateOrderDto } from './dto/create-order.dto';
 import { PartialOrderDto } from './dto/partial-order.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Order } from './entities/order.entity';
 import { Item } from 'src/items/entities/item.entity';
 import { Picture } from 'src/pictures/entities/picture.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
+import { OrderStatus } from 'src/types/order.types';
 
 export class OrdersService {
   private readonly s3Client = new S3Client({
@@ -52,6 +51,7 @@ export class OrdersService {
         project_name,
         order_type: 'single',
         note,
+        status:OrderStatus.InProgress,
         user: find_user,
       });
 
