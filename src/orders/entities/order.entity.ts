@@ -34,6 +34,9 @@ export class Order {
   note: string;
 
   @Column({ nullable: true })
+  procurement_note: string;
+
+  @Column({ nullable: true })
   unit_of_measure: string;
 
   @Column({ nullable: true })
