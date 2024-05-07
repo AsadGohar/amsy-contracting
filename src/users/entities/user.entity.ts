@@ -34,7 +34,7 @@ export class User {
   @Column({ type: 'enum', enum: ['procurement', 'engineer'] })
   role: string;
 
-  @Column({ type: 'string', nullable: true })
+  @Column({nullable: true })
   device_token: string;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
