@@ -4,7 +4,7 @@ import {
   Column,
   OneToMany,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
 } from 'typeorm';
 import { Order } from '../../orders/entities/order.entity';
 
@@ -33,6 +33,9 @@ export class User {
 
   @Column({ type: 'enum', enum: ['procurement', 'engineer'] })
   role: string;
+
+  @Column({ type: 'string', nullable: true })
+  device_token: string;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

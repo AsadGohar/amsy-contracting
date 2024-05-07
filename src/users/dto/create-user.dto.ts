@@ -19,6 +19,9 @@ export class CreateUserDto {
   @IsOptional()
   profile_picture_url: string;
 
+  @IsOptional()
+  device_token: string;
+
   @IsEnum(['procurement', 'engineer'])
   role: string;
 }
