@@ -34,12 +34,19 @@ export class UsersService {
   }
 
   async login(dto: PartialUserDto) {
-    const { email, password } = dto;
+    const { email, password, device_token } = dto;
+    console.log(device_token,'device_token')
     const user = await this.userRepository.findOne({
       relations: [],
       where: { email },
     });
     if(!user) throw new UnauthorizedException('user not found');
+    user.device_token = device_token
+    await this.userRepository.save(user)
+    const updated_user = await this.userRepository.findOne({
+      relations: [],
+      where: { email },
+    });
     const passwordMatched = await bcrypt.compare(password, user.password);
     if (!passwordMatched) {
       throw new UnauthorizedException('Invalid Credentials');
@@ -53,7 +60,7 @@ export class UsersService {
       secret: process.env.JWT_SECRET,
       expiresIn: '1d',
     });
-    return { user, access_token, message: 'login successfull' };
+    return { user: updated_user, access_token, message: 'login successfull' };
   }
 
   async findAll() {
