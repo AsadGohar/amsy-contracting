@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { OrderStatus } from 'src/types/order.types';
+import { NotFoundException } from '@nestjs/common';
 
 export class OrdersService {
   private readonly s3Client = new S3Client({
@@ -30,6 +31,7 @@ export class OrdersService {
 
   async create(createOrderDto: any, user_id: number, files: any) {
     try {
+      // console.log('heeasda')
       const {
         delivery_date,
         project_name,
@@ -56,7 +58,6 @@ export class OrdersService {
       });
 
       const new_order = await this.orderRepository.save(create_order);
-
       items.map(async (item, index) => {
         const create_item = this.itemRepository.create({
           name: item.name,
@@ -173,9 +174,22 @@ export class OrdersService {
   }
 
   async update(id: number, updateOrderDto: PartialOrderDto) {
-    return await this.orderRepository.update(id, {
+   const find_order =  await this.orderRepository.findOne({
+      where : {
+        id
+      }
+    })
+    if(!find_order) throw new NotFoundException('order not found')
+    const update_order = await this.orderRepository.update(id, {
       ...updateOrderDto,
     });
+    if(update_order){
+      return await this.orderRepository.findOne({
+        where : {
+          id
+        }
+      })
+    }
   }
 
   remove(id: number) {
