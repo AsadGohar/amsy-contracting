@@ -23,6 +23,7 @@ export class FirebaseService {
         const send_notification = await this.frebase_admin
           .messaging()
           .sendEachForMulticast(message);
+        console.log(send_notification, 'nooot')
         if (send_notification) {
           return {
             message: 'Notification sent',
