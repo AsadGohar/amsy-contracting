@@ -12,6 +12,7 @@ import { Order } from './orders/entities/order.entity';
 import { Picture } from './pictures/entities/picture.entity';
 import { ConfigModule } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { FirebaseService } from './notification/firebase.service.utils';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -35,6 +36,6 @@ import { JwtService } from '@nestjs/jwt';
     PicturesModule,
   ],
   controllers: [AppController],
-  providers: [AppService, JwtService],
+  providers: [AppService, JwtService, FirebaseService],
 })
 export class AppModule {}

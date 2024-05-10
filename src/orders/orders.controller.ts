@@ -76,9 +76,10 @@ export class OrdersController {
   async updateOrder(
     @Param('id') id: string,
     @Body(ValidationPipe) updateOrderDto: PartialOrderDto,
+    @Request() request
   ) {
     const orderId = parseInt(id, 10);
-    return this.ordersService.update(orderId, updateOrderDto);
+    return this.ordersService.update(orderId, updateOrderDto, request.decoded_data.user_id);
   }
 
   @Get('user/:user_id')

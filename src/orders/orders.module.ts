@@ -7,12 +7,13 @@ import { Item } from 'src/items/entities/item.entity';
 import { Picture } from 'src/pictures/entities/picture.entity';
 import { User } from 'src/users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
+import { FirebaseService } from 'src/notification/firebase.service.utils';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Order, Item, Picture, User]),
   ],
   controllers: [OrdersController],
-  providers: [OrdersService, JwtService],
+  providers: [OrdersService, JwtService, FirebaseService],
 })
 export class OrdersModule {}

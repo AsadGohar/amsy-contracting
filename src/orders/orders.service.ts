@@ -10,6 +10,7 @@ import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { OrderStatus } from 'src/types/order.types';
 import { NotFoundException } from '@nestjs/common';
+import { FirebaseService } from 'src/notification/firebase.service.utils';
 
 export class OrdersService {
   private readonly s3Client = new S3Client({
@@ -27,6 +28,7 @@ export class OrdersService {
     private readonly pictureRepository: Repository<Picture>,
 
     private readonly configService: ConfigService,
+    private readonly firebaseService: FirebaseService,
   ) {}
 
   async create(createOrderDto: any, user_id: number, files: any) {
@@ -53,7 +55,7 @@ export class OrdersService {
         project_name,
         order_type: 'single',
         note,
-        status:OrderStatus.InProgress,
+        status: OrderStatus.InProgress,
         user: find_user,
       });
 
@@ -73,7 +75,7 @@ export class OrdersService {
           const file_promises = files[String(index)].map((file: any) => {
             let file_name = uuidv4() + '-' + file.fileName;
             file_names.push(file_name);
-            console.log(file,'baase');
+            console.log(file, 'baase');
             const buf = Buffer.from(file.base64, 'base64');
             // console.log(buf, 'dasdasds');
             return this.s3Client.send(
@@ -173,22 +175,34 @@ export class OrdersService {
     });
   }
 
-  async update(id: number, updateOrderDto: PartialOrderDto) {
-   const find_order =  await this.orderRepository.findOne({
-      where : {
-        id
-      }
-    })
-    if(!find_order) throw new NotFoundException('order not found')
+  async update(id: number, updateOrderDto: PartialOrderDto, user_id: string) {
+    const find_order = await this.orderRepository.findOne({
+      where: {
+        id,
+      },
+    });
+    if (!find_order) throw new NotFoundException('order not found');
     const update_order = await this.orderRepository.update(id, {
       ...updateOrderDto,
     });
-    if(update_order){
+    if (update_order) {
+      if (updateOrderDto.status) {
+        const find_user = await this.userRepository.findOne({
+          where: {
+            id: Number(user_id),
+          },
+        });
+        await this.firebaseService.sendNotification(
+          [find_user.device_token],
+          'Order Status',
+          updateOrderDto.status,
+        );
+      }
       return await this.orderRepository.findOne({
-        where : {
-          id
-        }
-      })
+        where: {
+          id,
+        },
+      });
     }
   }
 
