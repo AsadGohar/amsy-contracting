@@ -25,6 +25,7 @@ export class FirebaseService {
       };
       console.log('heree in firebase')
       if (this.frebase_admin) {
+        console.log('inside firebase')
         const send_notification = await this.frebase_admin
           .messaging()
           .sendEachForMulticast(message);
@@ -45,7 +46,7 @@ export class FirebaseService {
       }
     } catch (error) {
       throw new InternalServerErrorException(
-        error.message || 'failed to create user',
+        error.message || 'firbase failed',
       );
     }
   }
