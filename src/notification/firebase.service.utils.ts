@@ -6,7 +6,11 @@ import { firebase_config } from 'src/utils/firebase.util';
 @Injectable()
 export class FirebaseService {
   private readonly frebase_admin =
-    getApps().length == 0 ? admin.initializeApp(firebase_config) : null;
+    getApps().length == 0
+      ? admin.initializeApp({
+          credential: admin.credential.cert(firebase_config),
+        })
+      : null;
 
   constructor() {}
 
@@ -23,8 +27,8 @@ export class FirebaseService {
         const send_notification = await this.frebase_admin
           .messaging()
           .sendEachForMulticast(message);
-        console.log(send_notification, 'nooot')
-        if (send_notification) {
+        console.log(send_notification.responses[0].error, 'error firbase');
+        if (send_notification.successCount > 0) {
           return {
             message: 'Notification sent',
             data: message,
