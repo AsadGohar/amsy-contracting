@@ -1,5 +1,5 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { getApps } from 'firebase-admin/app';
+import { getApps, getApp } from 'firebase-admin/app';
 import admin from 'firebase-admin';
 import { firebase_config } from 'src/utils/firebase.util';
 
@@ -10,7 +10,7 @@ export class FirebaseService {
       ? admin.initializeApp({
           credential: admin.credential.cert(firebase_config),
         })
-      : null;
+      : admin.app()
 
   constructor() {}
 
