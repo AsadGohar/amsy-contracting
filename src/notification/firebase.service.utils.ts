@@ -23,11 +23,13 @@ export class FirebaseService {
         },
         tokens,
       };
+      console.log('heree in firebase')
       if (this.frebase_admin) {
         const send_notification = await this.frebase_admin
           .messaging()
           .sendEachForMulticast(message);
-        console.log(send_notification.responses[0].error, 'error firbase');
+        console.log(send_notification.responses[0], 'error firbase');
+        console.log(send_notification, 'not');
         if (send_notification.successCount > 0) {
           return {
             message: 'Notification sent',

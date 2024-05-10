@@ -186,12 +186,14 @@ export class OrdersService {
       ...updateOrderDto,
     });
     if (update_order) {
+      console.log(updateOrderDto.status, 'sasa')
       if (updateOrderDto.status) {
         const find_user = await this.userRepository.findOne({
           where: {
             id: Number(user_id),
           },
         });
+        console.log('afttter update')
         await this.firebaseService.sendNotification(
           [find_user.device_token],
           'Order Status',
