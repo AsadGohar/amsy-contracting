@@ -25,10 +25,10 @@ import { FirebaseService } from './notification/firebase.service.utils';
       database: process.env.DB_DATABASE,
       entities: [User, Order, Item, Picture],
       synchronize: true,
-      ssl: false,
-      // ssl:{
-      //   rejectUnauthorized:false,
-      // },
+      // ssl: false,
+      ssl:{
+        rejectUnauthorized:false,
+      },
     }),
     UsersModule,
     OrdersModule,
