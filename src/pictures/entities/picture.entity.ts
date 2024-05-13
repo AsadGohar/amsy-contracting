@@ -29,5 +29,8 @@ export class Picture {
   updatedAt: Date;
 
   @ManyToOne(() => Item, (item) => item.pictures, { onDelete: 'CASCADE' })
-  item: Item;
+  engineer_item: Item;
+
+  @ManyToOne(() => Item, (item) => item.procurement_pictures, { onDelete: 'CASCADE' })
+  procurement_item: Item;
 }

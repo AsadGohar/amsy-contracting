@@ -96,7 +96,7 @@ export class OrdersService {
               // console.log(index, file_names[index])
               const create_pic = this.pictureRepository.create({
                 file_uploaded_name: file_names[index],
-                item: saved_item,
+                engineer_item: saved_item,
                 original_name: 'name',
                 url: process.env.AWS_URL + file_names[index],
               });
@@ -128,13 +128,13 @@ export class OrdersService {
   async findOne(id: number) {
     // console.log('here');
     const res = await this.orderRepository.findOne({
-      relations: ['items', 'items.pictures', 'user'],
+      relations: ['items', 'items.pictures', 'user', 'items.procurement_pictures' ],
       where: {
         id,
       },
     });
 
-    console.log(res.items[0].pictures, 'ressss');
+    // console.log(res.items[0], 'ressss');
     return res;
   }
 

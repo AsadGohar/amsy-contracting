@@ -23,7 +23,7 @@ export class FirebaseService {
         },
         tokens,
       };
-      console.log('heree in firebase', this.frebase_admin)
+      // console.log('heree in firebase', this.frebase_admin)
       if (this.frebase_admin) {
         console.log('inside firebase')
         const send_notification = await this.frebase_admin

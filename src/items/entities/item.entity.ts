@@ -60,6 +60,11 @@ export class Item {
   })
   order: Order;
 
-  @OneToMany(() => Picture, (picture) => picture.item)
+  @OneToMany(() => Picture, (picture) => picture.engineer_item)
   pictures: Picture[];
+
+  @OneToMany(() => Picture, (picture) => picture.procurement_item)
+  procurement_pictures: Picture[];
+
+  
 }
