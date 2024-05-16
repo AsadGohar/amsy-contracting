@@ -27,7 +27,7 @@ import { FirebaseService } from './notification/firebase.service.utils';
       synchronize: true,
       // ssl: false,
       ssl:{
-        rejectUnauthorized:false,
+        rejectUnauthorized:false
       },
     }),
     UsersModule,
