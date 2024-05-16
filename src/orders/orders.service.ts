@@ -11,6 +11,8 @@ import { ConfigService } from '@nestjs/config';
 import { OrderStatus } from 'src/types/order.types';
 import { NotFoundException } from '@nestjs/common';
 import { FirebaseService } from 'src/notification/firebase.service.utils';
+import { createObjectCsvWriter } from 'csv-writer';
+import * as path from 'path';
 
 export class OrdersService {
   private readonly s3Client = new S3Client({
@@ -68,7 +70,7 @@ export class OrdersService {
           order: new_order,
         });
         const saved_item = await this.itemRepository.save(create_item);
-        console.log(saved_item.id, 'itme created and saved');
+        // console.log(saved_item.id, 'itme created and saved');
 
         if (files[String(index)].length > 0) {
           const file_names = [];
@@ -90,7 +92,7 @@ export class OrdersService {
           console.log(file_names, 'name');
 
           const res = await Promise.all(file_promises);
-          console.log(res);
+          // console.log(res);
           if (res) {
             files[String(index)].map(async (item, index) => {
               // console.log(index, file_names[index])
@@ -128,7 +130,12 @@ export class OrdersService {
   async findOne(id: number) {
     // console.log('here');
     const res = await this.orderRepository.findOne({
-      relations: ['items', 'items.pictures', 'user', 'items.procurement_pictures' ],
+      relations: [
+        'items',
+        'items.pictures',
+        'user',
+        'items.procurement_pictures',
+      ],
       where: {
         id,
       },
@@ -210,5 +217,63 @@ export class OrdersService {
 
   remove(id: number) {
     return `This action removes a #${id} order`;
+  }
+
+  async createCSV(id: number) {
+    const csvWriter = createObjectCsvWriter({
+      path: '/utils/file.csv',
+      header: [
+        { id: 'name', title: 'NAME' },
+        { id: 'lang', title: 'LANGUAGE' },
+      ],
+    });
+
+    const records = [
+      { name: 'Bob', lang: 'French, English' },
+      { name: 'Mary', lang: 'English' },
+    ];
+    console.log('hereee');
+    csvWriter
+      .writeRecords(records)
+      .then(() => {
+        console.log('done');
+      })
+      .catch((err) => {
+        console.log(err, 'in csv');
+      });
+  }
+
+  async generateCsvFile(): Promise<string> {
+    const orders = await this.orderRepository.find({
+      relations: ['user', 'items'],
+    });
+    if (orders.length > 0) {
+      let data = orders.map((order) => {
+        return {
+          delivery_date: order.delivery_date,
+          project_name: order.project_name,
+          order_type: order.order_type,
+          status: order.status,
+          note: order.note,
+          procurement_note: order.procurement_note,
+          unit_of_measure: order.unit_of_measure,
+          expected_date: order.expected_date,
+          createdAt: order.createdAt,
+          updatedAt: order.updatedAt,
+          user: order.user.name,
+          items: order.items.map((item) => item.name).join(','),
+        };
+      });
+
+      const file_path = path.join(__dirname, '../../', 'data.csv');
+      const csvWriter = createObjectCsvWriter({
+        path: file_path,
+        header: Object.keys(data[0]).map((key) => ({ id: key, title: key })),
+      });
+
+      await csvWriter.writeRecords(data);
+
+      return file_path;
+    }
   }
 }

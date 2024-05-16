@@ -7,11 +7,17 @@ import {
   UseGuards,
   Request,
   ValidationPipe,
+  StreamableFile, Res
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { PartialOrderDto } from './dto/partial-order.dto';
 import { AuthGuard } from 'src/guards/auth.guards';
 import { formDataToJson } from 'src/utils/form.utils';
+import { createReadStream } from 'fs';
+import { join } from 'path';
+import type { Response } from 'express';
+import * as path from 'path';
+
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
@@ -65,10 +71,18 @@ export class OrdersController {
     return this.ordersService.findAll();
   }
 
-  @Get(':id')
-  @UseGuards(AuthGuard)
-  findOne(@Param('id') id: string) {
-    return this.ordersService.findOne(+id);
+  @Get('file')
+  async generateCsv(@Res() res: Response){
+    const filePath = path.join(__dirname, '../../', 'data.csv');
+
+    await this.ordersService.generateCsvFile()
+
+    res.download(filePath, (err) => {
+      if (err) {
+        console.error('Error downloading file:', err);
+        res.status(500).send('Error downloading file');
+      }
+    });
   }
 
   @Post('update/:id')
@@ -87,4 +101,11 @@ export class OrdersController {
   findByUserId(@Param('user_id') user_id: string) {
     return this.ordersService.findByUserId(+user_id);
   }
+
+  @Get(':id')
+  @UseGuards(AuthGuard)
+  findOne(@Param('id') id: string) {
+    return this.ordersService.findOne(+id);
+  }
+  
 }
