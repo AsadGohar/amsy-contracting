@@ -72,7 +72,6 @@ export class OrdersController {
   }
 
   @Get('file')
-  @UseGuards(AuthGuard)
   async generateCsv(@Res() res: Response){
     const filePath = path.join(__dirname, '../../', 'data.csv');
 
