@@ -22,9 +22,6 @@ export class Order {
   project_name: string;
 
   @Column()
-  delivery_address: string;
-
-  @Column()
   order_type: string;
 
   @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.InProgress })

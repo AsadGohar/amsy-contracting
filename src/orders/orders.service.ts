@@ -39,8 +39,6 @@ export class OrdersService {
       const {
         delivery_date,
         project_name,
-        delivery_address,
-        order_type,
         note,
         items,
       } = createOrderDto;
@@ -52,7 +50,6 @@ export class OrdersService {
       });
 
       const create_order = this.orderRepository.create({
-        delivery_address,
         delivery_date,
         project_name,
         order_type: 'single',

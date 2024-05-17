@@ -7,14 +7,12 @@ import {
   UseGuards,
   Request,
   ValidationPipe,
-  StreamableFile, Res
+  Res,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { PartialOrderDto } from './dto/partial-order.dto';
 import { AuthGuard } from 'src/guards/auth.guards';
 import { formDataToJson } from 'src/utils/form.utils';
-import { createReadStream } from 'fs';
-import { join } from 'path';
 import type { Response } from 'express';
 import * as path from 'path';
 
@@ -44,7 +42,6 @@ export class OrdersController {
       {
         delivery_date: new_data.delivery_date,
         project_name: new_data.project_name,
-        delivery_address: new_data.delivery_address,
         note: new_data.note,
         items: new_data.items,
       },
@@ -73,10 +70,10 @@ export class OrdersController {
 
   @Get('file')
   // @UseGuards(AuthGuard)
-  async generateCsv(@Res() res: Response){
+  async generateCsv(@Res() res: Response) {
     const filePath = path.join(__dirname, '../../', 'data.csv');
 
-    await this.ordersService.generateCsvFile()
+    await this.ordersService.generateCsvFile();
 
     res.download(filePath, (err) => {
       if (err) {
@@ -91,10 +88,14 @@ export class OrdersController {
   async updateOrder(
     @Param('id') id: string,
     @Body(ValidationPipe) updateOrderDto: PartialOrderDto,
-    @Request() request
+    @Request() request,
   ) {
     const orderId = parseInt(id, 10);
-    return this.ordersService.update(orderId, updateOrderDto, request.decoded_data.user_id);
+    return this.ordersService.update(
+      orderId,
+      updateOrderDto,
+      request.decoded_data.user_id,
+    );
   }
 
   @Get('user/:user_id')
@@ -108,5 +109,4 @@ export class OrdersController {
   findOne(@Param('id') id: string) {
     return this.ordersService.findOne(+id);
   }
-  
 }

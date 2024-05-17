@@ -9,9 +9,6 @@ export class CreateOrderDto {
   project_name: string;
 
   @IsNotEmpty()
-  delivery_address: string;
-
-  @IsNotEmpty()
   @IsEnum(['single', 'complete'])
   order_type: string;
 
