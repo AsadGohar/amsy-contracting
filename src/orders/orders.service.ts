@@ -247,18 +247,21 @@ export class OrdersService {
     if (orders.length > 0) {
       let data = orders.map((order) => {
         return {
-          delivery_date: order.delivery_date,
-          project_name: order.project_name,
-          order_type: order.order_type,
-          status: order.status,
-          note: order.note,
-          procurement_note: order.procurement_note,
-          unit_of_measure: order.unit_of_measure,
-          expected_date: order.expected_date,
-          createdAt: order.createdAt,
-          updatedAt: order.updatedAt,
-          user: order.user.name,
-          items: order.items.map((item) => item.name).join(','),
+          "Delivery Date": order.delivery_date,
+          "Project Name": order.project_name,
+          "Order Type": order.order_type,
+          "Status": order.status,
+          "Note": order.note,
+          "Procurement Note": order.procurement_note,
+          "Unit of Measure": order.unit_of_measure,
+          "Expected Date": order.expected_date,
+          "Created At": order.createdAt,
+          "Updated At": order.updatedAt,
+          "User Name": order.user.name,
+          "Item Names": order.items.map((item) => item.name).join(','),
+          "Quantity": order.items.reduce( (accumulator, current_value) => accumulator + current_value.quantity, 0),
+          "Vendor Names": order.items.map((item) => item.supplier_name).join(','),
+          "Contact Numbers": order.items.map((item) => item.supplier_contact).join(','),
         };
       });
 
