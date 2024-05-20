@@ -242,7 +242,7 @@ export class OrdersService {
 
   async generateCsvFile(): Promise<string> {
     const orders = await this.orderRepository.find({
-      relations: ['user', 'items'],
+      relations: ['user', 'items', 'items.pictures'],
     });
     if (orders.length > 0) {
       let data = orders.map((order) => {
@@ -262,6 +262,7 @@ export class OrdersService {
           "Quantity": order.items.reduce( (accumulator, current_value) => accumulator + current_value.quantity, 0),
           "Vendor Names": order.items.map((item) => item.supplier_name).join(','),
           "Contact Numbers": order.items.map((item) => item.supplier_contact).join(','),
+          "Item Images" : order.items.map((item) => item.pictures.map(pic=> pic.url).join(',')),
         };
       });
 
